@@ -22,7 +22,7 @@
     );
 
     $image = $hasRealImage
-        ? ($product->thumbnail_url ?? $product->medium_url ?? $product->large_image_url)
+        ? ($product->medium_url ?? $product->thumbnail_url ?? $product->large_image_url)
         : null;
 
     $clubLeague = $product

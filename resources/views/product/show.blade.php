@@ -228,7 +228,7 @@
         @if (isset($relatedProducts) && $relatedProducts->isNotEmpty())
             <section class="mt-16 border-t border-gray-200 pt-12" aria-labelledby="related-heading">
                 <h2 id="related-heading" class="section-title mb-8">Related Products</h2>
-                <div class="store-product-grid">
+                <div class="home-product-grid">
                     @foreach ($relatedProducts as $related)
                         <x-product-card :product="$related" />
                     @endforeach

@@ -62,7 +62,7 @@
                     </a>
                 </div>
 
-                <div class="store-product-grid">
+                <div class="home-product-grid">
                     @foreach ($featuredProducts as $product)
                         <x-product-card :product="$product" />
                     @endforeach
@@ -86,7 +86,7 @@
                     </a>
                 </div>
 
-                <div class="store-product-grid">
+                <div class="home-product-grid">
                     @foreach ($newArrivals as $product)
                         <x-product-card :product="$product" />
                     @endforeach

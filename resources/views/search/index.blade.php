@@ -34,7 +34,7 @@
                 <p class="text-gray-600">Enter a search term to find products.</p>
             </div>
         @elseif ($products instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator && $products->isNotEmpty())
-            <div class="store-product-grid">
+            <div class="home-product-grid">
                 @foreach ($products as $product)
                     <x-product-card :product="$product" />
                 @endforeach

@@ -76,7 +76,7 @@
                             <a href="{{ route('shop') }}" class="btn-primary mt-6 inline-flex min-h-[44px]">Clear Filters</a>
                         </div>
                     @else
-                        <div class="store-product-grid">
+                        <div class="shop-product-grid">
                             @foreach ($products as $product)
                                 <x-product-card :product="$product" />
                             @endforeach

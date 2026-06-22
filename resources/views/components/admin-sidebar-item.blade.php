@@ -8,15 +8,15 @@
 <a
     href="{{ $href }}"
     @class([
-        'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition',
-        'bg-brand-red text-white' => $active,
-        'text-gray-400 hover:bg-gray-900 hover:text-white' => ! $active,
+        'admin-sidebar-link',
+        'admin-sidebar-link-active' => $active,
     ])
+    @if ($active) aria-current="page" @endif
 >
     @if ($icon)
-        <span class="flex h-5 w-5 shrink-0 items-center justify-center text-current opacity-70">
-            {!! $icon !!}
+        <span class="admin-sidebar-link-icon">
+            <x-dynamic-component :component="'icons.'.$icon" class="h-[18px] w-[18px]" />
         </span>
     @endif
-    <span>{{ $label }}</span>
+    <span class="truncate">{{ $label }}</span>
 </a>
