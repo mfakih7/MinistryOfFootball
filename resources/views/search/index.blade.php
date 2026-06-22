@@ -17,9 +17,16 @@
             @endif
         </header>
 
-        <form method="GET" action="{{ route('search') }}" class="mb-10 flex gap-3">
-            <input type="search" name="q" value="{{ $query }}" placeholder="Search jerseys, teams, leagues..." class="flex-1 rounded-md border border-gray-300 px-4 py-3 text-sm focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red">
-            <button type="submit" class="btn-primary shrink-0">Search</button>
+        <form method="GET" action="{{ route('search') }}" class="store-search-form mb-10">
+            <x-icons.search class="store-search-form-icon" />
+            <input
+                type="search"
+                name="q"
+                value="{{ $query }}"
+                placeholder="Search jerseys, teams, leagues..."
+                class="store-search-input"
+            >
+            <button type="submit" class="store-search-submit">Search</button>
         </form>
 
         @if ($query === '')
@@ -27,7 +34,7 @@
                 <p class="text-gray-600">Enter a search term to find products.</p>
             </div>
         @elseif ($products instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator && $products->isNotEmpty())
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="store-product-grid">
                 @foreach ($products as $product)
                     <x-product-card :product="$product" />
                 @endforeach

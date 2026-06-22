@@ -6,7 +6,8 @@
 
 @php
     $hasSlides = $slides->isNotEmpty();
-    $defaultBg = $fallbackImage ?? 'https://placehold.co/1920x650/0a0a0a/333333?text=Ministry+Of+Football';
+    $defaultBg = $fallbackImage ?? 'https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=1600&q=80';
+    $defaultDescription = $heroDescription ?? 'Official jerseys from the world\'s biggest clubs. Premium quality. Unmatched style.';
 @endphp
 
 <section
@@ -37,6 +38,7 @@
                 $shopUrl = $slide->button_url ?: route('shop');
                 $isExternal = $shopUrl && (str_starts_with($shopUrl, 'http://') || str_starts_with($shopUrl, 'https://'));
                 $ctaLabel = $slide->button_text ?: 'Shop Now';
+                $titleLines = preg_split('/\R/', $slide->title, 2);
             @endphp
             <div
                 x-show="active === {{ $index }}"
@@ -49,20 +51,32 @@
             >
                 <div class="home-hero-overlay" aria-hidden="true"></div>
 
-                <div class="container-store home-hero-inner">
+                <div class="home-hero-inner">
                     <div class="home-hero-content">
-                        @if ($slide->subtitle)
-                            <p class="home-hero-label">{{ $slide->subtitle }}</p>
-                        @endif
-                        <h1 class="home-hero-title">{{ $slide->title }}</h1>
-                        @if ($heroDescription)
-                            <p class="home-hero-description">{{ $heroDescription }}</p>
+                        <h1 class="home-hero-title">
+                            @if (count($titleLines) > 1)
+                                <span class="home-hero-title-line">{{ $titleLines[0] }}</span>
+                                <span class="home-hero-title-line">{{ $titleLines[1] }}</span>
+                            @else
+                                @php
+                                    $words = explode(' ', $slide->title, 3);
+                                    $line1 = implode(' ', array_slice($words, 0, 2));
+                                    $line2 = implode(' ', array_slice($words, 2));
+                                @endphp
+                                <span class="home-hero-title-line">{{ $line1 ?: $slide->title }}</span>
+                                @if ($line2)
+                                    <span class="home-hero-title-line">{{ $line2 }}</span>
+                                @endif
+                            @endif
+                        </h1>
+                        @if ($defaultDescription)
+                            <p class="home-hero-description">{{ $defaultDescription }}</p>
                         @endif
                         <div class="home-hero-actions">
-                            <a href="{{ $shopUrl }}" @if($isExternal) target="_blank" rel="noopener" @endif class="btn-primary home-hero-btn-primary">
-                                {{ $ctaLabel }}
+                            <a href="{{ $shopUrl }}" @if($isExternal) target="_blank" rel="noopener" @endif class="home-hero-btn-primary">
+                                Shop Collection
+                                <x-icons.arrow-up-right class="h-4 w-4" />
                             </a>
-                            <a href="{{ route('shop') }}" class="btn-secondary home-hero-btn-secondary">Browse Shop</a>
                         </div>
                     </div>
                 </div>
@@ -86,14 +100,18 @@
         <div class="home-hero-slide" style="background-image: url('{{ $defaultBg }}');">
             <div class="home-hero-overlay" aria-hidden="true"></div>
 
-            <div class="container-store home-hero-inner">
+            <div class="home-hero-inner">
                 <div class="home-hero-content">
-                    <p class="home-hero-label">Official-Style Kits</p>
-                    <h1 class="home-hero-title">Wear Your Passion</h1>
-                    <p class="home-hero-description">{{ $heroDescription ?? 'Premium football jerseys from top clubs and leagues. NBA shirts and accessories delivered to your door.' }}</p>
+                    <h1 class="home-hero-title">
+                        <span class="home-hero-title-line">Wear Your</span>
+                        <span class="home-hero-title-line">Passion</span>
+                    </h1>
+                    <p class="home-hero-description">{{ $defaultDescription }}</p>
                     <div class="home-hero-actions">
-                        <a href="{{ route('shop') }}" class="btn-primary home-hero-btn-primary">Shop Now</a>
-                        <a href="{{ route('shop') }}" class="btn-secondary home-hero-btn-secondary">Browse Shop</a>
+                        <a href="{{ route('shop') }}" class="home-hero-btn-primary">
+                            Shop Collection
+                            <x-icons.arrow-up-right class="h-4 w-4" />
+                        </a>
                     </div>
                 </div>
             </div>

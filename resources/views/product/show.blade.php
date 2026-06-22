@@ -22,24 +22,27 @@
             <span class="text-gray-900">{{ $productName }}</span>
         </nav>
 
-        <div class="grid gap-10 lg:grid-cols-2 lg:gap-16" @if($product) x-data="{ activeImage: @js($mainImage) }" @endif>
+        <div class="grid gap-8 lg:grid-cols-2 lg:gap-16" @if($product) x-data="{ activeImage: @js($mainImage) }" @endif>
             <div>
-                <div class="aspect-square overflow-hidden rounded-lg bg-gray-100">
+                <div class="product-gallery-main">
                     <img
                         :src="activeImage"
                         src="{{ $mainImage }}"
                         alt="{{ $productName }}"
-                        loading="lazy"
-                        class="h-full w-full object-cover transition duration-300"
+                        loading="eager"
+                        class="h-full w-full object-contain p-4 sm:object-cover sm:p-0"
                     >
                 </div>
                 @if ($galleryImages->isNotEmpty())
-                    <div class="mt-4 grid grid-cols-4 gap-3">
-                        @foreach ($galleryImages->take(4) as $image)
+                    <div class="product-gallery-thumbs">
+                        @foreach ($galleryImages->take(6) as $image)
                             @php $thumbUrl = $image->display_url ?? $mainImage; @endphp
-                            <button type="button" @click="activeImage = @js($thumbUrl)"
-                                :class="activeImage === @js($thumbUrl) ? 'border-brand-red ring-2 ring-brand-red ring-offset-2' : 'border-gray-200'"
-                                class="aspect-square overflow-hidden rounded-md border-2 bg-gray-100 hover:border-brand-red">
+                            <button
+                                type="button"
+                                @click="activeImage = @js($thumbUrl)"
+                                :class="activeImage === @js($thumbUrl) ? 'product-gallery-thumb-active' : 'border-gray-200'"
+                                class="product-gallery-thumb"
+                            >
                                 <img src="{{ $thumbUrl }}" alt="{{ $image->alt_text ?? $productName }}" loading="lazy" class="h-full w-full object-cover">
                             </button>
                         @endforeach
@@ -131,7 +134,7 @@
                                     @foreach ($sizes as $size)
                                         <button type="button" @click="selectedSize = {{ $size->id }}"
                                             :class="selectedSize === {{ $size->id }} ? 'border-brand-black bg-brand-black text-white' : 'border-gray-300 text-gray-700 hover:border-brand-black'"
-                                            class="min-w-[3rem] rounded-md border px-4 py-2 text-sm font-medium">{{ $size->name }}</button>
+                                            class="min-h-[44px] min-w-[44px] rounded-lg border px-4 py-2.5 text-sm font-medium">{{ $size->name }}</button>
                                     @endforeach
                                 </div>
                             </div>
@@ -144,7 +147,7 @@
                                     @foreach ($colors as $color)
                                         <button type="button" @click="selectedColor = {{ $color->id }}"
                                             :class="selectedColor === {{ $color->id }} ? 'ring-2 ring-brand-black ring-offset-2' : ''"
-                                            class="h-8 w-8 rounded-full border-2 border-gray-300"
+                                            class="h-11 w-11 rounded-full border-2 border-gray-300"
                                             style="background-color: {{ $color->hex_code ?? '#ccc' }}"
                                             aria-label="{{ $color->name }}"></button>
                                     @endforeach
@@ -225,7 +228,7 @@
         @if (isset($relatedProducts) && $relatedProducts->isNotEmpty())
             <section class="mt-16 border-t border-gray-200 pt-12" aria-labelledby="related-heading">
                 <h2 id="related-heading" class="section-title mb-8">Related Products</h2>
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="store-product-grid">
                     @foreach ($relatedProducts as $related)
                         <x-product-card :product="$related" />
                     @endforeach

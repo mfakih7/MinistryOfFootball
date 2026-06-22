@@ -27,8 +27,8 @@ class HomeController extends Controller
 
         $newArrivals = Product::query()->active()->newArrival()->with(['images', 'team', 'league'])->ordered()->limit(4)->get();
         $featuredProducts = Product::query()->active()->featured()->with(['images', 'team', 'league'])->ordered()->limit(4)->get();
-        $categories = Category::query()->active()->ordered()->limit(8)->get();
-        $leagues = League::query()->active()->ordered()->limit(8)->get();
+        $categories = Category::query()->active()->ordered()->withCount('products')->limit(8)->get();
+        $leagues = League::query()->active()->ordered()->withCount('products')->limit(8)->get();
         $recentlyViewed = $this->recentlyViewed->products(4);
 
         $heroFallbackProduct = Product::query()->active()->with('images')->bestSeller()->ordered()->first()

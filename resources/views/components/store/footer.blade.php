@@ -18,59 +18,123 @@
         ['label' => 'Shipping Policy', 'href' => route('policy.shipping')],
         ['label' => 'Return Policy', 'href' => route('policy.returns')],
     ];
-
-    $legalLinks = [
-        ['label' => 'Privacy Policy', 'href' => route('policy.privacy')],
-        ['label' => 'Terms of Service', 'href' => route('policy.terms')],
-    ];
-
-    $hasSocial = ($storeSettings['instagram_url'] ?? null)
-        || ($storeSettings['facebook_url'] ?? null)
-        || ($storeSettings['tiktok_url'] ?? null);
 @endphp
 
 <footer class="store-footer">
     <div class="store-footer-main">
-        <div class="container-store py-10 lg:py-14">
-            <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-5 xl:gap-10">
-                {{-- Brand --}}
-                <div class="md:col-span-2 xl:col-span-1">
+        <div class="container-store py-8 md:py-14">
+            {{-- Mobile footer: brand + social + contact card only --}}
+            <div class="store-footer-mobile md:hidden">
+                <div class="store-footer-brand-mobile">
+                    <a href="{{ route('home') }}" class="group inline-flex items-center gap-2.5">
+                        <x-store.logo-mark variant="dark" />
+                    </a>
+                    <p class="mt-3 text-sm leading-relaxed text-gray-400">
+                        Premium football jerseys, NBA shirts, and sportswear for fans who wear their passion.
+                    </p>
+                </div>
+
+                <div class="store-footer-social-row">
+                    @if ($storeSettings['instagram_url'] ?? null)
+                        <a href="{{ $storeSettings['instagram_url'] }}" target="_blank" rel="noopener" class="store-footer-social-btn" aria-label="Instagram">
+                            <x-icons.instagram class="h-4 w-4" />
+                        </a>
+                    @endif
+                    @if ($storeSettings['tiktok_url'] ?? null)
+                        <a href="{{ $storeSettings['tiktok_url'] }}" target="_blank" rel="noopener" class="store-footer-social-btn" aria-label="TikTok">
+                            <x-icons.tiktok class="h-4 w-4" />
+                        </a>
+                    @endif
+                    @if ($storeSettings['facebook_url'] ?? null)
+                        <a href="{{ $storeSettings['facebook_url'] }}" target="_blank" rel="noopener" class="store-footer-social-btn" aria-label="Facebook">
+                            <x-icons.facebook class="h-4 w-4" />
+                        </a>
+                    @endif
+                    @if ($whatsappFloatUrl ?? null)
+                        <a href="{{ $whatsappFloatUrl }}" target="_blank" rel="noopener" class="store-footer-social-btn" aria-label="WhatsApp">
+                            <x-icons.whatsapp class="h-4 w-4" />
+                        </a>
+                    @endif
+                </div>
+
+                <div class="store-footer-contact-card">
+                    <h3 class="store-footer-contact-card-title">Get in Touch</h3>
+                    <ul class="store-footer-contact-card-list">
+                        @if ($storeSettings['store_phone'] ?? null)
+                            <li>
+                                <a href="tel:{{ $storeSettings['store_phone'] }}" class="store-footer-contact-card-item">
+                                    <span class="store-footer-contact-card-icon">
+                                        <x-icons.phone class="h-4 w-4" />
+                                    </span>
+                                    <span class="store-footer-contact-card-text">{{ $storeSettings['store_phone'] }}</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($storeSettings['store_email'] ?? null)
+                            <li>
+                                <a href="mailto:{{ $storeSettings['store_email'] }}" class="store-footer-contact-card-item">
+                                    <span class="store-footer-contact-card-icon">
+                                        <x-icons.email class="h-4 w-4" />
+                                    </span>
+                                    <span class="store-footer-contact-card-text break-words">{{ $storeSettings['store_email'] }}</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($storeSettings['store_address'] ?? null)
+                            <li>
+                                <span class="store-footer-contact-card-item">
+                                    <span class="store-footer-contact-card-icon">
+                                        <x-icons.location class="h-4 w-4" />
+                                    </span>
+                                    <span class="store-footer-contact-card-text">{{ $storeSettings['store_address'] }}</span>
+                                </span>
+                            </li>
+                        @endif
+                        <li>
+                            <span class="store-footer-contact-card-item">
+                                <span class="store-footer-contact-card-icon">
+                                    <x-icons.clock class="h-4 w-4" />
+                                </span>
+                                <span class="store-footer-contact-card-text">Mon–Sat, 10:00 AM – 7:00 PM</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {{-- Desktop footer: unchanged column layout --}}
+            <div class="store-footer-desktop">
+                <div>
                     <a href="{{ route('home') }}" class="group inline-flex items-center gap-2.5">
                         <x-store.logo-mark variant="dark" />
                     </a>
                     <p class="mt-3 max-w-xs text-sm leading-relaxed text-gray-400">
-                        Premium football jerseys, NBA shirts, and sportswear accessories delivered with care.
+                        Premium football jerseys, NBA shirts, and sportswear for fans who wear their passion.
                     </p>
-
-                    @if ($whatsappFloatUrl ?? null)
-                        <a href="{{ $whatsappFloatUrl }}" target="_blank" rel="noopener" class="store-footer-whatsapp mt-4 inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-500">
-                            <x-icons.whatsapp class="h-4 w-4" />
-                            Chat on WhatsApp
-                        </a>
-                    @endif
-
-                    @if ($hasSocial)
-                        <div class="mt-4 flex items-center gap-1.5">
-                            @if ($storeSettings['instagram_url'] ?? null)
-                                <a href="{{ $storeSettings['instagram_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="Instagram">
-                                    <x-icons.instagram class="h-3.5 w-3.5" />
-                                </a>
-                            @endif
-                            @if ($storeSettings['facebook_url'] ?? null)
-                                <a href="{{ $storeSettings['facebook_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="Facebook">
-                                    <x-icons.facebook class="h-3.5 w-3.5" />
-                                </a>
-                            @endif
-                            @if ($storeSettings['tiktok_url'] ?? null)
-                                <a href="{{ $storeSettings['tiktok_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="TikTok">
-                                    <x-icons.tiktok class="h-3.5 w-3.5" />
-                                </a>
-                            @endif
-                        </div>
-                    @endif
+                    <div class="mt-4 flex items-center gap-1.5">
+                        @if ($whatsappFloatUrl ?? null)
+                            <a href="{{ $whatsappFloatUrl }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="WhatsApp">
+                                <x-icons.whatsapp class="h-3.5 w-3.5" />
+                            </a>
+                        @endif
+                        @if ($storeSettings['instagram_url'] ?? null)
+                            <a href="{{ $storeSettings['instagram_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="Instagram">
+                                <x-icons.instagram class="h-3.5 w-3.5" />
+                            </a>
+                        @endif
+                        @if ($storeSettings['facebook_url'] ?? null)
+                            <a href="{{ $storeSettings['facebook_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="Facebook">
+                                <x-icons.facebook class="h-3.5 w-3.5" />
+                            </a>
+                        @endif
+                        @if ($storeSettings['tiktok_url'] ?? null)
+                            <a href="{{ $storeSettings['tiktok_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="TikTok">
+                                <x-icons.tiktok class="h-3.5 w-3.5" />
+                            </a>
+                        @endif
+                    </div>
                 </div>
 
-                {{-- Shop --}}
                 <div class="store-footer-col">
                     <h3 class="store-footer-heading">Shop</h3>
                     <ul class="store-footer-links">
@@ -84,7 +148,6 @@
                     </ul>
                 </div>
 
-                {{-- Customer Care --}}
                 <div class="store-footer-col">
                     <h3 class="store-footer-heading">Customer Care</h3>
                     <ul class="store-footer-links">
@@ -94,17 +157,6 @@
                     </ul>
                 </div>
 
-                {{-- Legal --}}
-                <div class="store-footer-col">
-                    <h3 class="store-footer-heading">Legal</h3>
-                    <ul class="store-footer-links">
-                        @foreach ($legalLinks as $link)
-                            <li><a href="{{ $link['href'] }}" class="store-footer-link">{{ $link['label'] }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                {{-- Contact --}}
                 <div class="store-footer-col">
                     <h3 class="store-footer-heading">Contact</h3>
                     <ul class="store-footer-contact">
@@ -145,13 +197,9 @@
     </div>
 
     <div class="store-footer-bottom">
-        <div class="container-store flex flex-col items-center gap-2 py-5 text-xs text-gray-500 sm:flex-row sm:justify-between">
+        <div class="container-store py-5 text-center text-xs text-gray-500 md:text-left">
             <p>&copy; {{ $year }} {{ $storeName }}. All rights reserved.</p>
-            <div class="flex items-center gap-3">
-                <a href="{{ route('policy.privacy') }}" class="transition hover:text-white">Privacy</a>
-                <span class="text-gray-700" aria-hidden="true">|</span>
-                <a href="{{ route('policy.terms') }}" class="transition hover:text-white">Terms</a>
-            </div>
+            <p class="mt-0.5 text-gray-600">Orders confirmed via WhatsApp</p>
         </div>
     </div>
 </footer>
@@ -178,10 +226,4 @@
     >
         <x-icons.arrow-up class="h-5 w-5" />
     </button>
-
-    @if ($whatsappFloatUrl ?? null)
-        <a href="{{ $whatsappFloatUrl }}" target="_blank" rel="noopener" class="store-whatsapp-float" aria-label="WhatsApp">
-            <x-icons.whatsapp class="h-7 w-7" />
-        </a>
-    @endif
 </div>
