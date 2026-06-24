@@ -1,58 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Ministry Of Football
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Premium football jersey, NBA shirt, and sportswear e-commerce website. Customers browse and order through a WhatsApp-first checkout flow — there is no online payment gateway; every order is saved to the database and then confirmed with the customer over WhatsApp.
 
-## About Laravel
+- **Live domain:** [ministryoffootball.online](https://ministryoffootball.online)
+- **Stack:** Laravel 13, PHP 8.3, MySQL, Tailwind CSS 4, Alpine.js, Vite
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Project Overview
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Ministry Of Football is a two-part application:
 
-## Learning Laravel
+1. **Public storefront** — browse, filter, and order products via WhatsApp.
+2. **Admin panel** — manage catalog, orders, coupons, homepage content, and store settings.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+There is no payment gateway integration by design. The business model is: customer places an order on the site → order is saved → customer is redirected to WhatsApp with a pre-filled message → the team confirms and fulfills manually.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Features
 
-## Agentic Development
+### Public website features
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- Homepage with hero slider, category cards, "Shop by League" grid, featured/new-arrival product sections
+- Shop page with category/league/team/price/size/color filters, sort, search, and pagination
+- Product detail page with image gallery + lightbox zoom, size/color/quantity selection, related products
+- Product customization (name/number) on jerseys marked customizable, with a configurable customization fee
+- Cart with quantity controls, coupon codes, and live order summary
+- WhatsApp-first checkout — no payment gateway, no card data ever collected
+- Order success page and `/track-order` lookup by phone number
+- Site search, static policy pages (shipping, returns, privacy, terms), `/sitemap.xml`, `robots.txt`
+
+### Admin panel features
+
+- Dashboard with key store metrics and reports
+- Orders: view, update status, add admin notes, see the generated WhatsApp message and customization details
+- Products: CRUD, multiple images (auto-generated thumbnail/medium/large/original variants), variants (size/color), customizable flag
+- Catalog management: categories, leagues, teams, product types, sizes, colors
+- Coupons (percentage/fixed, date-bound), homepage slides, customer feedback inbox
+- Branding (logo/favicon/footer) and Settings (delivery fee, free shipping threshold, customization fee, currency, contact info, social links, SEO, policy page content)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Laravel 13, PHP 8.3 |
+| Database | MySQL |
+| Frontend | Blade, Tailwind CSS 4, Alpine.js (CDN) |
+| Build tool | Vite |
+| Images | Intervention Image (WebP-first, JPEG fallback) |
+
+---
+
+## Requirements
+
+- PHP 8.3+ with extensions: `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, `gd` or `imagick`
+- MySQL 5.7+ / MariaDB 10.3+
+- Composer 2.x
+- Node.js 18+ and npm (**local machine only** — the production server does not need Node/npm; see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md))
+
+---
+
+## Local Setup
 
 ```bash
-composer require laravel/boost --dev
+git clone <repository-url> ministryoffootball
+cd ministryoffootball
 
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+
+# Configure DB credentials in .env, then:
+php artisan migrate --seed
+
+php artisan storage:link
+
+npm install
+npm run dev   # or: npm run build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Visit `http://localhost:8000` (or your configured Herd/Valet/XAMPP URL).
 
-## Contributing
+### Admin login note
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The `AdminUserSeeder` creates a default admin account:
 
-## Code of Conduct
+```
+Email:    admin@ministryfootball.test
+Password: password
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Change this password immediately after the first production deploy** — see [docs/PRODUCTION_CHECKLIST.md](docs/PRODUCTION_CHECKLIST.md).
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Image Optimization Note
 
-## License
+Product images are uploaded once and Intervention Image automatically generates four variants on disk:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Variant | Max width | Used for |
+|---|---|---|
+| `thumbnail` | 400px | Product cards (homepage, shop, related products) |
+| `medium` | 900px | Listing/detail previews |
+| `large` | 1600px | Product detail main gallery |
+| `original` | unscaled | Admin/reference only |
+
+Images are encoded as **WebP** when supported by the server's image library, falling back to JPEG automatically. Product cards always use the `thumbnail` variant — never the original upload — to keep the homepage and shop page fast. Homepage slide images are capped at 1920px wide.
+
+---
+
+## WhatsApp Order Flow
+
+1. Customer adds product(s) to cart and proceeds to checkout.
+2. Customer fills in name, phone, address, and optional notes — **no payment is collected**.
+3. On submit, an `Order` + `OrderItem` records are created in the database, and a formatted WhatsApp message (itemized products, customization, subtotal, delivery, total) is generated and stored on the order.
+4. Customer is redirected to `wa.me/<store-whatsapp-number>?text=<message>` to send that message and continue the conversation with the store.
+5. Admin manages the order status (`pending → confirmed → delivered`, etc.) from the admin Orders page.
+
+The WhatsApp number used for this flow is configured in **Admin → Settings → WhatsApp Number**.
+
+---
+
+## Product Customization Flow
+
+Jerseys (or any product) can be flagged `is_customizable` in the admin product form. When customizable:
+
+1. At checkout, that cart item shows a "Customizable" badge and a **"Customize this item"** checkbox.
+2. Checking it reveals a required textarea for customization details (e.g. `Name: RONALDO, Number: 7`).
+3. The configured **Customization Fee** (Admin → Settings → Shipping, default `$0.00`) is added **once per customized item** (not per quantity) to the order total.
+4. The customization request, details, and fee are stored per order item and included in the WhatsApp message and the admin order detail page.
+
+---
+
+## Production Deployment Summary
+
+The production server (Namecheap cPanel) has **no Node/npm**, so:
+
+- `npm run build` is run **locally** and the resulting `public/build/` directory is **committed to git**.
+- The server only runs `composer install` and Laravel artisan commands — no `npm install`/`npm run build` on the server.
+- The cPanel document root must point directly at `ministryoffootball.online/public` (not a `repositories/.../public` subpath).
+
+Full step-by-step instructions: **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**
+Pre-launch checklist: **[docs/PRODUCTION_CHECKLIST.md](docs/PRODUCTION_CHECKLIST.md)**
+
+### Future deployment commands
+
+**Local machine:**
+```bash
+npm run build
+git add .
+git commit -m "your message"
+git push origin main
+```
+
+**Server** (`~/ministryoffootball.online`), or simply run `./deploy.sh`:
+```bash
+cd ~/ministryoffootball.online
+git pull origin main
+php ~/composer.phar install --optimize-autoloader --no-dev
+php artisan migrate --force
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```

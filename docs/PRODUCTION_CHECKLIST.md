@@ -1,82 +1,67 @@
-# Ministry Of Football — Production Deployment Checklist
+# Ministry Of Football — Production Checklist
 
-Use this checklist before handing the site to the client or deploying to a live server.
+Go through this list before announcing the site is live on `ministryoffootball.online`. See [DEPLOYMENT.md](DEPLOYMENT.md) for the step-by-step commands behind each item.
 
-## Environment (`.env`)
+## Environment
 
 - [ ] `APP_ENV=production`
 - [ ] `APP_DEBUG=false`
-- [ ] `APP_URL=https://your-domain.com` (must match the public site URL exactly)
-- [ ] `APP_KEY` is set (run `php artisan key:generate` once if missing)
+- [ ] `APP_URL=https://ministryoffootball.online` (must match the live URL exactly, including `https`)
+- [ ] `APP_KEY` is set (`php artisan key:generate`, once)
+- [ ] Database configured (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` for the cPanel MySQL database)
 
 ## Database
 
-- [ ] `DB_CONNECTION=mysql`
-- [ ] `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` configured for production
-- [ ] Database created and user has correct privileges
-- [ ] Run migrations: `php artisan migrate --force`
-- [ ] Run seeders only if needed on fresh install: `php artisan db:seed --force`
+- [ ] Migrations run (`php artisan migrate --force`)
+- [ ] Seeders run (`AdminUserSeeder`, `SettingSeeder` at minimum — see DEPLOYMENT.md)
+
+## Store Configuration (Admin → Settings)
+
+- [ ] Default admin password changed (default is `admin@ministryfootball.test` / `password` — **must not stay default in production**)
+- [ ] WhatsApp number updated to the real store number
+- [ ] Delivery fee updated to the real value
+- [ ] Customization fee updated to the real value (default is `$0.00`)
+- [ ] Store logo and favicon uploaded (Admin → Branding)
+- [ ] Store phone, email, and address updated
+- [ ] Policy page content filled in (shipping, returns, privacy, terms)
+- [ ] SEO title/description updated
+
+## SSL & Domain
+
+- [ ] SSL certificate active (AutoSSL run and issued in cPanel)
+- [ ] Force HTTPS redirect enabled for the domain
+- [ ] Document root confirmed as `ministryoffootball.online/public`
 
 ## Storage & Assets
 
-- [ ] Run `php artisan storage:link`
-- [ ] Ensure `storage/` and `bootstrap/cache/` are writable by the web server
-- [ ] Run `npm ci` (or `npm install`) then `npm run build`
-- [ ] Confirm uploaded product images load from `/storage/...`
+- [ ] Storage link working (`php artisan storage:link`; `public/storage` resolves)
+- [ ] Product images loading correctly on homepage, shop, and product pages (not broken/placeholder)
+- [ ] `public/build/` present and up to date (built locally via `npm run build`, committed, pulled on server)
 
-## Laravel Optimization
+## Functional Smoke Tests
 
-- [ ] `php artisan config:cache`
-- [ ] `php artisan route:cache`
-- [ ] `php artisan view:cache`
-- [ ] `php artisan event:cache` (if events are used)
-- [ ] Optional: `php artisan optimize`
-
-## Admin & Store Settings
-
-- [ ] Change default admin password (`admin@ministryfootball.test` / `password`) immediately
-- [ ] Update **WhatsApp number** in Admin → Settings (`whatsapp_number`)
-- [ ] Update store phone, email, and address
-- [ ] Review delivery fee and free shipping threshold
-- [ ] Fill in policy page content (shipping, returns, privacy, terms)
-- [ ] Update SEO title and description
-
-## Mail (Optional)
-
-- [ ] Configure `MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`
-- [ ] Set `MAIL_FROM_ADDRESS` and `MAIL_FROM_NAME`
-- [ ] Send a test email if contact/order notifications are enabled later
-
-## Web Server
-
-- [ ] Document root points to `/public` (not project root)
-- [ ] HTTPS enabled with valid SSL certificate
-- [ ] `mod_rewrite` / nginx rewrite rules configured for Laravel
-- [ ] PHP 8.3+ with required extensions (pdo_mysql, mbstring, openssl, fileinfo, gd or imagick)
-
-## Security & Operations
-
-- [ ] Remove or protect any dev/test routes and debug tools
-- [ ] Set up **regular database backups** (daily recommended)
-- [ ] Set up file/storage backups for uploaded images
-- [ ] Monitor disk space for `storage/app/public`
-- [ ] Restrict admin URL if desired (e.g. IP allowlist or separate subdomain)
-
-## Post-Deploy Smoke Tests
-
-- [ ] Homepage loads with slides and product sections
-- [ ] Shop filters and product pages work
-- [ ] Cart → checkout → order success → WhatsApp redirect
-- [ ] `/track-order` finds orders by phone
+- [ ] Checkout flow tested end-to-end (cart → checkout → order created)
+- [ ] WhatsApp redirect tested (order success page sends a real, correctly formatted message to the configured number)
+- [ ] Product customization tested (checkbox → required details → fee added to total)
+- [ ] Admin login tested with the **new**, non-default password
+- [ ] `/track-order` tested with a real order's phone number
 - [ ] `/search?q=...` returns results
-- [ ] Policy pages load from settings content
-- [ ] Admin login, orders, reports, coupons, and CRUD all work
-- [ ] Confirm order status **confirmed** deducts stock once; **cancelled** restores stock
-- [ ] `/sitemap.xml` accessible
 
-## Client Handoff Reminders
+## SEO & Crawling
 
-- [ ] Provide admin login credentials securely (not by email in plain text if possible)
-- [ ] Document how to add products, manage orders, and update homepage slides
-- [ ] Confirm real WhatsApp number is live and tested end-to-end
-- [ ] Replace placeholder social media URLs if still using defaults
+- [ ] `/sitemap.xml` tested and accessible
+- [ ] `robots.txt` reviewed (confirm it allows the right pages and disallows `/admin`, `/cart`, `/checkout`, etc. as appropriate)
+
+## Caching
+
+- [ ] `php artisan optimize:clear` run before re-caching (clears any stale cache from a previous deploy)
+- [ ] `php artisan config:cache` run
+- [ ] `php artisan route:cache` run
+- [ ] `php artisan view:cache` run
+
+## Operations (recommended, not blocking)
+
+- [ ] Regular database backups scheduled (cPanel → Backup, or a cron-based dump)
+- [ ] Storage/upload backups scheduled (`storage/app/public`)
+- [ ] `storage/logs/laravel.log` checked for errors after go-live
+- [ ] Real WhatsApp number tested from a real phone, not just simulated
