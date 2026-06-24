@@ -8,7 +8,13 @@
     $hasSlides = $slides->isNotEmpty();
     $defaultBg = $fallbackImage ?? 'https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=1600&q=80';
     $defaultDescription = $heroDescription ?? 'Official jerseys from the world\'s biggest clubs. Premium quality. Unmatched style.';
+    $firstSlide = $hasSlides ? $slides->first() : null;
+    $firstBgUrl = $firstSlide?->image ? asset('storage/'.$firstSlide->image) : $defaultBg;
 @endphp
+
+@push('head')
+    <link rel="preload" as="image" href="{{ $firstBgUrl }}" fetchpriority="high">
+@endpush
 
 <section
     class="home-hero"

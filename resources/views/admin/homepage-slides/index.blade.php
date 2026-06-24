@@ -26,7 +26,7 @@
                 <tr>
                     <td>
                         @if ($imageUrl)
-                            <img src="{{ $imageUrl }}" alt="{{ $slide->title }}" class="admin-table-thumb-wide">
+                            <img src="{{ $imageUrl }}" alt="{{ $slide->title }}" loading="lazy" decoding="async" class="admin-table-thumb-wide">
                         @else
                             <span class="text-gray-400">—</span>
                         @endif

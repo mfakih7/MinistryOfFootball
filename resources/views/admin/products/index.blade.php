@@ -76,7 +76,7 @@
                 @endphp
                 <tr>
                     <td>
-                        <img src="{{ $product->thumbnail_url }}" alt="{{ $product->name }}" class="admin-table-thumb">
+                        <img src="{{ $product->thumbnail_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async" class="admin-table-thumb">
                     </td>
                     <td>
                         <p class="font-semibold text-gray-900">{{ $product->name }}</p>

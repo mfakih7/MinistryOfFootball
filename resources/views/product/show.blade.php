@@ -73,6 +73,10 @@
                                 src="{{ $mainImage }}"
                                 alt="{{ $productName }}"
                                 loading="eager"
+                                fetchpriority="high"
+                                decoding="async"
+                                width="800"
+                                height="800"
                                 class="h-full w-full object-contain p-8"
                             >
                             @if ($discountPercent)

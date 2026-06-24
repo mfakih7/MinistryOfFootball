@@ -60,7 +60,7 @@ class ProductImage extends Model
     public function displayUrl(): Attribute
     {
         return Attribute::get(function () {
-            foreach ([$this->medium_path, $this->large_path, $this->thumbnail_path, $this->original_path] as $path) {
+            foreach ([$this->thumbnail_path, $this->medium_path, $this->large_path, $this->original_path] as $path) {
                 $url = StorageUrl::publicUrl($path);
 
                 if ($url !== null) {

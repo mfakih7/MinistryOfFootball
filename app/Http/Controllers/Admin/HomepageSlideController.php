@@ -30,7 +30,7 @@ class HomepageSlideController extends Controller
     public function store(HomepageSlideRequest $request): RedirectResponse
     {
         HomepageSlide::query()->create(
-            $this->slideAttributes($request, $this->images->storeSimpleImage($request->file('image'), 'homepage-slides'))
+            $this->slideAttributes($request, $this->images->storeSimpleImage($request->file('image'), 'homepage-slides', 1920))
         );
 
         return redirect()->route('admin.homepage-slides.index')->with('success', 'Slide created successfully.');
@@ -49,7 +49,7 @@ class HomepageSlideController extends Controller
             if ($homepageSlide->image) {
                 $this->images->deletePaths([$homepageSlide->image]);
             }
-            $imagePath = $this->images->storeSimpleImage($request->file('image'), 'homepage-slides');
+            $imagePath = $this->images->storeSimpleImage($request->file('image'), 'homepage-slides', 1920);
         }
 
         $homepageSlide->update($this->slideAttributes($request, $imagePath));
