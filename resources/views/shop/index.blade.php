@@ -16,37 +16,7 @@
                 <p class="mt-2 text-sm text-gray-600 sm:text-base">Browse our collection of football jerseys, NBA shirts, and accessories.</p>
             </header>
 
-            <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex flex-wrap items-center gap-3">
-                    <button
-                        type="button"
-                        @click="filtersOpen = true"
-                        class="shop-filter-trigger lg:hidden"
-                    >
-                        <x-icons.sliders class="h-4 w-4" />
-                        Filters
-                        @if ($activeFilterCount > 0)
-                            <span class="shop-filter-trigger-count">({{ $activeFilterCount }})</span>
-                        @endif
-                    </button>
-                    <p class="text-sm text-gray-600"><span class="font-semibold text-gray-900">{{ $products->total() }}</span> products</p>
-                </div>
-                <form method="GET" class="flex items-center gap-2">
-                    @foreach (collect($filters)->except('sort', 'page') as $key => $value)
-                        @if ($value !== null && $value !== '')
-                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                        @endif
-                    @endforeach
-                    <label for="sort" class="sr-only">Sort products</label>
-                    <select id="sort" name="sort" onchange="this.form.submit()" class="shop-sort-select">
-                        <option value="newest" @selected(($filters['sort'] ?? 'newest') === 'newest')>Newest</option>
-                        <option value="price_low_high" @selected(($filters['sort'] ?? '') === 'price_low_high')>Price: Low to High</option>
-                        <option value="price_high_low" @selected(($filters['sort'] ?? '') === 'price_high_low')>Price: High to Low</option>
-                        <option value="best_selling" @selected(($filters['sort'] ?? '') === 'best_selling')>Best Selling</option>
-                        <option value="name" @selected(($filters['sort'] ?? '') === 'name')>Name A–Z</option>
-                    </select>
-                </form>
-            </div>
+            <x-shop.toolbar :products="$products" :filters="$filters" :filter-options="$filterOptions" :active-filter-count="$activeFilterCount" />
 
             @if ($activeFilters)
                 <div class="shop-active-filters">

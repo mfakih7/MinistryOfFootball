@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function show(string $slug): View
     {
         $product = Product::query()
-            ->with(['images', 'variants.size', 'variants.color', 'team', 'league', 'category'])
+            ->with(['images', 'variants.size', 'variants.color', 'team', 'league', 'category', 'productType'])
             ->where('slug', $slug)
             ->active()
             ->first();

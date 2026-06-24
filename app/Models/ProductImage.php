@@ -72,6 +72,24 @@ class ProductImage extends Model
         });
     }
 
+    /**
+     * Highest-resolution variant available, for use as the product page hero image.
+     */
+    public function heroUrl(): Attribute
+    {
+        return Attribute::get(function () {
+            foreach ([$this->large_path, $this->original_path, $this->medium_path, $this->thumbnail_path] as $path) {
+                $url = StorageUrl::publicUrl($path);
+
+                if ($url !== null) {
+                    return $url;
+                }
+            }
+
+            return StorageUrl::placeholder($this->alt_text ?? 'Product');
+        });
+    }
+
     protected function urlForPath(?string $path): string
     {
         return StorageUrl::publicUrl($path)
