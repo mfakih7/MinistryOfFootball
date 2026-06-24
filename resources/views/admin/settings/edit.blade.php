@@ -66,6 +66,11 @@
                     <label class="admin-label" for="free_shipping_threshold">Free Shipping Threshold</label>
                     <input type="number" id="free_shipping_threshold" name="free_shipping_threshold" value="{{ old('free_shipping_threshold', $settings['free_shipping_threshold'] ?? '') }}" min="0" step="0.01" class="admin-input">
                 </div>
+                <div>
+                    <label class="admin-label" for="customization_fee">Customization Fee</label>
+                    <input type="number" id="customization_fee" name="customization_fee" value="{{ old('customization_fee', $settings['customization_fee'] ?? '0.00') }}" min="0" step="0.01" class="admin-input">
+                    <p class="mt-1 text-xs text-gray-500">Extra fee charged when a customer requests name/number customization on a customizable product.</p>
+                </div>
             </div>
         </div>
 

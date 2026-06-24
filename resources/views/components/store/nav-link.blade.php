@@ -2,6 +2,7 @@
     'href',
     'active' => false,
     'mobile' => false,
+    'accent' => false,
 ])
 
 <a
@@ -9,6 +10,7 @@
     @class([
         'nav-link' => ! $mobile,
         'nav-link-active' => ! $mobile && $active,
+        'nav-link-accent' => ! $mobile && $accent && ! $active,
         'nav-link-mobile' => $mobile,
         'nav-link-mobile-active' => $mobile && $active,
     ])

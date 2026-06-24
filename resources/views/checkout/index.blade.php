@@ -15,7 +15,15 @@
             </span>
         </div>
 
-        <div class="grid gap-6 lg:grid-cols-3 lg:gap-8" x-data="{ summaryOpen: true }">
+        <div
+            class="grid gap-6 lg:grid-cols-3 lg:gap-8"
+            x-data="{
+                summaryOpen: true,
+                customize: {},
+                fee: {{ $customizationFee }},
+                get customizationTotal() { return Object.values(this.customize).filter(Boolean).length * this.fee }
+            }"
+        >
             {{-- Order Summary: shown first on mobile, right column on desktop --}}
             <div class="order-1 lg:order-2">
                 <div class="space-y-4 lg:sticky lg:top-24">
@@ -31,19 +39,54 @@
                         <div x-show="summaryOpen" x-transition class="mt-4">
                             <ul>
                                 @foreach ($items as $item)
-                                    <li class="checkout-summary-item">
-                                        <div class="checkout-summary-thumb">
-                                            <img src="{{ $item['thumbnail_url'] }}" alt="{{ $item['product_name'] }}" loading="lazy" class="h-full w-full object-contain p-1">
+                                    <li class="checkout-summary-item flex-col items-stretch sm:flex-row sm:items-start">
+                                        <div class="flex gap-3">
+                                            <div class="checkout-summary-thumb">
+                                                <img src="{{ $item['thumbnail_url'] }}" alt="{{ $item['product_name'] }}" loading="lazy" class="h-full w-full object-contain p-1">
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <p class="line-clamp-1 text-sm font-semibold text-gray-900">{{ $item['product_name'] }}</p>
+                                                <p class="mt-0.5 text-xs text-gray-500">
+                                                    @if ($item['size_name']) Size: {{ $item['size_name'] }} @endif
+                                                    @if ($item['color_name']) @if($item['size_name']) &middot; @endif Color: {{ $item['color_name'] }} @endif
+                                                    @if ($item['size_name'] || $item['color_name']) &middot; @endif Qty: {{ $item['quantity'] }}
+                                                </p>
+                                                @if ($item['is_customizable'])
+                                                    <span class="checkout-customizable-badge">Customizable</span>
+                                                @endif
+                                            </div>
+                                            <p class="shrink-0 text-sm font-bold text-gray-900">{{ $currencySymbol }}{{ number_format($item['total_price'], 2) }}</p>
                                         </div>
-                                        <div class="min-w-0 flex-1">
-                                            <p class="line-clamp-1 text-sm font-semibold text-gray-900">{{ $item['product_name'] }}</p>
-                                            <p class="mt-0.5 text-xs text-gray-500">
-                                                @if ($item['size_name']) Size: {{ $item['size_name'] }} @endif
-                                                @if ($item['color_name']) @if($item['size_name']) &middot; @endif Color: {{ $item['color_name'] }} @endif
-                                                @if ($item['size_name'] || $item['color_name']) &middot; @endif Qty: {{ $item['quantity'] }}
-                                            </p>
-                                        </div>
-                                        <p class="shrink-0 text-sm font-bold text-gray-900">{{ $currencySymbol }}{{ number_format($item['total_price'], 2) }}</p>
+
+                                        @if ($item['is_customizable'])
+                                            <div class="checkout-customize-block">
+                                                <label class="checkout-customize-checkbox">
+                                                    <input
+                                                        type="checkbox"
+                                                        form="checkout-form"
+                                                        name="customizations[{{ $item['key'] }}][requested]"
+                                                        value="1"
+                                                        x-model="customize['{{ $item['key'] }}']"
+                                                    >
+                                                    Customize this item (+{{ $currencySymbol }}{{ number_format($customizationFee, 2) }})
+                                                </label>
+                                                <div x-show="customize['{{ $item['key'] }}']" x-cloak x-transition class="mt-2">
+                                                    <label class="sr-only" for="customization-{{ $item['key'] }}">Customization Details</label>
+                                                    <textarea
+                                                        id="customization-{{ $item['key'] }}"
+                                                        form="checkout-form"
+                                                        name="customizations[{{ $item['key'] }}][details]"
+                                                        rows="2"
+                                                        maxlength="500"
+                                                        placeholder="Example: Name: RONALDO, Number: 7"
+                                                        class="checkout-customize-textarea"
+                                                    >{{ old("customizations.{$item['key']}.details") }}</textarea>
+                                                    @error("customizations.{$item['key']}.details")
+                                                        <p class="mt-1 text-xs text-brand-red">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>
@@ -55,10 +98,14 @@
                                 <div class="flex justify-between text-green-700"><dt>Discount @if($coupon)({{ $coupon['code'] }})@endif</dt><dd>-{{ $currencySymbol }}{{ number_format($discountAmount, 2) }}</dd></div>
                             @endif
                             <div class="flex justify-between"><dt class="text-gray-600">Delivery Fee</dt><dd class="font-medium">{{ $deliveryFee > 0 ? $currencySymbol.number_format($deliveryFee, 2) : 'Free' }}</dd></div>
+                            <div class="flex justify-between" x-show="customizationTotal > 0" x-cloak>
+                                <dt class="text-gray-600">Customization</dt>
+                                <dd class="font-medium" x-text="'{{ $currencySymbol }}' + customizationTotal.toFixed(2)"></dd>
+                            </div>
                         </dl>
                         <div class="checkout-summary-total-row">
                             <span class="text-base font-bold text-gray-900">Total</span>
-                            <span class="checkout-summary-total-value">{{ $currencySymbol }}{{ number_format($total, 2) }}</span>
+                            <span class="checkout-summary-total-value" x-text="'{{ $currencySymbol }}' + ({{ $total }} + customizationTotal).toFixed(2)"></span>
                         </div>
 
                         <div class="checkout-trust-row">
@@ -83,7 +130,7 @@
 
             {{-- Customer Information: below summary on mobile, left column on desktop --}}
             <div class="order-2 lg:order-1 lg:col-span-2">
-                <form action="{{ route('checkout.store') }}" method="POST" class="checkout-card space-y-5 sm:space-y-6">
+                <form id="checkout-form" action="{{ route('checkout.store') }}" method="POST" class="checkout-card space-y-5 sm:space-y-6">
                     @csrf
                     <div>
                         <h2 class="checkout-card-title">

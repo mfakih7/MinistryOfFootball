@@ -38,7 +38,7 @@
                             <label for="message" class="block text-sm font-medium text-gray-700">Message *</label>
                             <textarea id="message" name="message" rows="6" required class="mt-1 w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red">{{ old('message') }}</textarea>
                         </div>
-                        <button type="submit" class="btn-primary">Send Message</button>
+                        <button type="submit" class="btn-storefront-primary">Send Message</button>
                     </form>
                 </div>
 
@@ -54,7 +54,7 @@
                         <p><span class="text-gray-500">Address:</span> {{ $storeSettings['store_address'] }}</p>
                     @endif
                     @if ($whatsappFloatUrl ?? null)
-                        <a href="{{ $whatsappFloatUrl }}" target="_blank" rel="noopener" class="btn-primary mt-4 inline-flex w-full justify-center">WhatsApp Us</a>
+                        <a href="{{ $whatsappFloatUrl }}" target="_blank" rel="noopener" class="btn-storefront-primary mt-4 inline-flex w-full justify-center">WhatsApp Us</a>
                     @endif
                 </div>
             </div>

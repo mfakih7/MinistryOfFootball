@@ -17,17 +17,35 @@
         ['label' => 'Track Order', 'href' => route('track-order')],
         ['label' => 'Shipping Policy', 'href' => route('policy.shipping')],
         ['label' => 'Return Policy', 'href' => route('policy.returns')],
+        ['label' => 'Privacy Policy', 'href' => route('policy.privacy')],
+        ['label' => 'Terms of Service', 'href' => route('policy.terms')],
     ];
 @endphp
 
 <footer class="store-footer">
+    <div class="store-footer-cta">
+        <div class="container-store store-footer-cta-inner">
+            <div>
+                <p class="store-footer-cta-eyebrow">Order via WhatsApp</p>
+                <h2 class="store-footer-cta-title">Questions about a kit? Our team replies fast.</h2>
+            </div>
+            @if ($whatsappFloatUrl ?? null)
+                <a href="{{ $whatsappFloatUrl }}" target="_blank" rel="noopener" class="store-footer-cta-btn">
+                    <x-icons.whatsapp class="h-5 w-5" />
+                    Chat on WhatsApp
+                </a>
+            @endif
+        </div>
+    </div>
+
     <div class="store-footer-main">
-        <div class="container-store py-8 md:py-14">
+        <div class="container-store py-10 md:py-16">
             {{-- Mobile footer: brand + social + contact card only --}}
             <div class="store-footer-mobile md:hidden">
                 <div class="store-footer-brand-mobile">
-                    <a href="{{ route('home') }}" class="group inline-flex items-center gap-2.5">
-                        <x-store.logo-mark variant="dark" />
+                    <a href="{{ route('home') }}" class="store-footer-brand-mobile-link">
+                        <x-store.logo-mark variant="dark" :show-text="false" />
+                        <span class="store-footer-brand-mobile-name">{{ $storeName }}</span>
                     </a>
                     <p class="mt-3 text-sm leading-relaxed text-gray-400">
                         Premium football jerseys, NBA shirts, and sportswear for fans who wear their passion.
@@ -100,6 +118,14 @@
                         </li>
                     </ul>
                 </div>
+
+                <nav class="store-footer-mobile-links" aria-label="Footer">
+                    <a href="{{ route('shop') }}">Shop</a>
+                    <a href="{{ route('contact') }}">Contact</a>
+                    <a href="{{ route('track-order') }}">Track Order</a>
+                    <a href="{{ route('policy.shipping') }}">Shipping</a>
+                    <a href="{{ route('policy.returns') }}">Returns</a>
+                </nav>
             </div>
 
             {{-- Desktop footer: unchanged column layout --}}
@@ -111,25 +137,25 @@
                     <p class="mt-3 max-w-xs text-sm leading-relaxed text-gray-400">
                         Premium football jerseys, NBA shirts, and sportswear for fans who wear their passion.
                     </p>
-                    <div class="mt-4 flex items-center gap-1.5">
+                    <div class="mt-5 flex items-center gap-2.5">
                         @if ($whatsappFloatUrl ?? null)
                             <a href="{{ $whatsappFloatUrl }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="WhatsApp">
-                                <x-icons.whatsapp class="h-3.5 w-3.5" />
+                                <x-icons.whatsapp class="h-4 w-4" />
                             </a>
                         @endif
                         @if ($storeSettings['instagram_url'] ?? null)
                             <a href="{{ $storeSettings['instagram_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="Instagram">
-                                <x-icons.instagram class="h-3.5 w-3.5" />
+                                <x-icons.instagram class="h-4 w-4" />
                             </a>
                         @endif
                         @if ($storeSettings['facebook_url'] ?? null)
                             <a href="{{ $storeSettings['facebook_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="Facebook">
-                                <x-icons.facebook class="h-3.5 w-3.5" />
+                                <x-icons.facebook class="h-4 w-4" />
                             </a>
                         @endif
                         @if ($storeSettings['tiktok_url'] ?? null)
                             <a href="{{ $storeSettings['tiktok_url'] }}" target="_blank" rel="noopener" class="store-social-icon" aria-label="TikTok">
-                                <x-icons.tiktok class="h-3.5 w-3.5" />
+                                <x-icons.tiktok class="h-4 w-4" />
                             </a>
                         @endif
                     </div>
@@ -197,9 +223,16 @@
     </div>
 
     <div class="store-footer-bottom">
-        <div class="container-store py-5 text-center text-xs text-gray-500 md:text-left">
-            <p>&copy; {{ $year }} {{ $storeName }}. All rights reserved.</p>
-            <p class="mt-0.5 text-gray-600">Orders confirmed via WhatsApp</p>
+        <div class="container-store store-footer-bottom-inner">
+            <div>
+                <p>&copy; {{ $year }} {{ $storeName }}. All rights reserved.</p>
+                <p class="mt-0.5 text-gray-600">Orders confirmed via WhatsApp</p>
+            </div>
+            <div class="store-footer-bottom-links">
+                <a href="{{ route('policy.privacy') }}">Privacy Policy</a>
+                <span aria-hidden="true">&middot;</span>
+                <a href="{{ route('policy.terms') }}">Terms</a>
+            </div>
         </div>
     </div>
 </footer>

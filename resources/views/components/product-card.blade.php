@@ -72,6 +72,10 @@
                 @endif
             </div>
         @endif
+
+        <a href="{{ $url }}" class="product-card-quick-action" aria-label="View {{ $name }}">
+            <x-icons.arrow-up-right class="h-4 w-4" />
+        </a>
     </div>
 
     <div class="product-card-body">
@@ -92,16 +96,6 @@
             @else
                 <span class="product-card-price">{{ $price ?? '$89.99' }}</span>
             @endif
-        </div>
-
-        <div class="product-card-actions">
-            <a href="{{ $url }}" class="product-card-view-pill">
-                View
-                <x-icons.arrow-up-right class="h-3.5 w-3.5" />
-            </a>
-            <a href="{{ $url }}" class="product-card-icon-btn" aria-label="Add {{ $name }} to cart">
-                <x-icons.cart class="h-4 w-4" />
-            </a>
         </div>
     </div>
 </article>

@@ -47,6 +47,12 @@ class WhatsAppOrderService
 
             $lines[] = '   Price: '.$symbol.number_format((float) $item->unit_price, 2);
             $lines[] = '   Total: '.$symbol.number_format((float) $item->total_price, 2);
+
+            if ($item->customization_requested) {
+                $lines[] = '   Customization: Yes';
+                $lines[] = '   Name/Number: '.$item->customization_details;
+                $lines[] = '   Customization Fee: '.$symbol.number_format((float) $item->customization_fee, 2);
+            }
         }
 
         $lines[] = '';
@@ -54,6 +60,10 @@ class WhatsAppOrderService
 
         if ((float) $order->discount_total > 0) {
             $lines[] = 'Discount: -'.$symbol.number_format((float) $order->discount_total, 2);
+        }
+
+        if ((float) $order->customization_total > 0) {
+            $lines[] = 'Customization: '.$symbol.number_format((float) $order->customization_total, 2);
         }
 
         $lines[] = 'Delivery: '.$symbol.number_format((float) $order->delivery_fee, 2);

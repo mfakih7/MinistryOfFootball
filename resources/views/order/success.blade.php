@@ -28,17 +28,20 @@
                     @if ($order->discount_total > 0)
                         <div class="flex justify-between text-green-700"><dt>Discount</dt><dd>-{{ $currencySymbol }}{{ number_format($order->discount_total, 2) }}</dd></div>
                     @endif
+                    @if ($order->customization_total > 0)
+                        <div class="flex justify-between"><dt>Customization</dt><dd>{{ $currencySymbol }}{{ number_format($order->customization_total, 2) }}</dd></div>
+                    @endif
                     <div class="flex justify-between"><dt>Delivery</dt><dd>{{ $currencySymbol }}{{ number_format($order->delivery_fee, 2) }}</dd></div>
                     <div class="flex justify-between font-bold text-base"><dt>Total</dt><dd>{{ $currencySymbol }}{{ number_format($order->total, 2) }}</dd></div>
                 </dl>
             </div>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <a href="{{ route('order.whatsapp', $order) }}" class="btn-primary icon-label justify-center">
+                <a href="{{ route('order.whatsapp', $order) }}" class="btn-storefront-primary icon-label justify-center">
                     <x-icons.whatsapp class="h-5 w-5" />
                     Continue to WhatsApp
                 </a>
-                <a href="{{ route('shop') }}" class="btn-secondary icon-label justify-center">
+                <a href="{{ route('shop') }}" class="btn-storefront-secondary icon-label justify-center">
                     <x-icons.arrow-left class="h-4 w-4" />
                     Back to Shop
                 </a>

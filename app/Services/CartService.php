@@ -48,6 +48,11 @@ class CartService
         return (float) ($this->coupon()['discount_amount'] ?? 0);
     }
 
+    public function customizationFee(): float
+    {
+        return (float) Setting::getValue('customization_fee', 0);
+    }
+
     public function coupon(): ?array
     {
         return session(self::COUPON_KEY);
@@ -149,6 +154,7 @@ class CartService
             'product_slug' => $product->slug,
             'product_sku' => $product->sku,
             'thumbnail_url' => $product->thumbnail_url,
+            'is_customizable' => (bool) $product->is_customizable,
             'size_name' => $variant?->size?->name,
             'color_name' => $variant?->color?->name,
             'unit_price' => $unitPrice,
@@ -214,6 +220,7 @@ class CartService
             'product_slug' => (string) ($item['product_slug'] ?? ''),
             'product_sku' => $item['product_sku'] ?? null,
             'thumbnail_url' => (string) ($item['thumbnail_url'] ?? $item['thumbnail'] ?? ''),
+            'is_customizable' => (bool) ($item['is_customizable'] ?? false),
             'size_name' => $item['size_name'] ?? $item['size'] ?? null,
             'color_name' => $item['color_name'] ?? $item['color'] ?? null,
             'unit_price' => $unitPrice,

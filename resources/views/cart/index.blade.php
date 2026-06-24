@@ -23,36 +23,12 @@
                 </div>
                 <p class="text-lg font-medium text-gray-900">Your cart is empty</p>
                 <p class="mt-2 text-sm text-gray-500">Browse our shop and add items to get started.</p>
-                <a href="{{ route('shop') }}" class="btn-primary icon-label mt-6 inline-flex min-h-[48px]">
+                <a href="{{ route('shop') }}" class="btn-storefront-primary icon-label mt-6 inline-flex min-h-[48px]">
                     <x-icons.arrow-left class="h-4 w-4" />
                     Continue Shopping
                 </a>
             </div>
         @else
-            <div class="cart-trust-bar">
-                <div class="cart-trust-item">
-                    <span class="cart-trust-icon"><x-icons.truck class="h-5 w-5" /></span>
-                    <span>
-                        <span class="cart-trust-title block">Free Delivery</span>
-                        <span class="cart-trust-subtitle">On qualifying orders</span>
-                    </span>
-                </div>
-                <div class="cart-trust-item">
-                    <span class="cart-trust-icon"><x-icons.shield class="h-5 w-5" /></span>
-                    <span>
-                        <span class="cart-trust-title block">Premium Quality</span>
-                        <span class="cart-trust-subtitle">Authentic-style kits</span>
-                    </span>
-                </div>
-                <div class="cart-trust-item">
-                    <span class="cart-trust-icon"><x-icons.whatsapp class="h-5 w-5" /></span>
-                    <span>
-                        <span class="cart-trust-title block">WhatsApp Support</span>
-                        <span class="cart-trust-subtitle">Order help anytime</span>
-                    </span>
-                </div>
-            </div>
-
             <div class="grid gap-8 lg:grid-cols-3">
                 <div class="space-y-4 lg:col-span-2">
                     <div class="cart-items-card">
@@ -131,7 +107,7 @@
                                 <div class="flex justify-between"><dt class="text-gray-600">Delivery</dt><dd class="font-medium">{{ $deliveryFee > 0 ? $currencySymbol.number_format($deliveryFee, 2) : 'Free' }}</dd></div>
                                 <div class="flex justify-between border-t border-gray-200 pt-3 text-base font-bold"><dt>Total</dt><dd class="cart-summary-total-value">{{ $currencySymbol }}{{ number_format($total, 2) }}</dd></div>
                             </dl>
-                            <a href="{{ route('checkout') }}" class="btn-primary icon-label mt-6 w-full min-h-[48px] justify-center">
+                            <a href="{{ route('checkout') }}" class="btn-storefront-primary icon-label mt-6 w-full min-h-[48px] justify-center">
                                 <x-icons.lock class="h-4 w-4" />
                                 Proceed to Checkout
                             </a>

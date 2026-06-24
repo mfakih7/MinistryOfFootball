@@ -18,7 +18,7 @@
                     <input type="text" id="order_number" name="order_number" value="{{ old('order_number', $order_number ?? '') }}" class="mt-2 w-full rounded-md border border-gray-300 px-4 py-3 text-sm focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red" placeholder="MOF-2026-0001">
                     @error('order_number')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
-                <button type="submit" class="btn-primary w-full">Track Order</button>
+                <button type="submit" class="btn-storefront-primary w-full">Track Order</button>
             </form>
 
             @isset($orders)

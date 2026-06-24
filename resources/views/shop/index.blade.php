@@ -43,7 +43,7 @@
                     @if ($products->isEmpty())
                         <div class="shop-empty-state">
                             <p class="text-lg font-medium text-gray-700">No products match your filters.</p>
-                            <a href="{{ route('shop') }}" class="btn-primary mt-6 inline-flex min-h-[44px]">Clear Filters</a>
+                            <a href="{{ route('shop') }}" class="btn-storefront-primary mt-6 inline-flex min-h-[44px]">Clear Filters</a>
                         </div>
                     @else
                         <div class="shop-product-grid">

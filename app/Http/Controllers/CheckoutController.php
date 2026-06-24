@@ -31,6 +31,7 @@ class CheckoutController extends Controller
             'total' => $this->cart->total(),
             'coupon' => $this->cart->coupon(),
             'currencySymbol' => $this->cart->currencySymbol(),
+            'customizationFee' => $this->cart->customizationFee(),
         ]);
     }
 

@@ -18,6 +18,9 @@ class OrderItem extends Model
         'quantity',
         'unit_price',
         'total_price',
+        'customization_requested',
+        'customization_details',
+        'customization_fee',
     ];
 
     protected function casts(): array
@@ -29,6 +32,8 @@ class OrderItem extends Model
             'quantity' => 'integer',
             'unit_price' => 'decimal:2',
             'total_price' => 'decimal:2',
+            'customization_requested' => 'boolean',
+            'customization_fee' => 'decimal:2',
         ];
     }
 

@@ -1,9 +1,11 @@
 @php
     use App\Support\StoreNavigation;
     use App\Services\CartService;
+    use App\Services\WhatsAppOrderService;
 
     $storeName = $storeSettings['store_name'] ?? 'Ministry Of Football';
     $cartCount = $cartCount ?? app(CartService::class)->count();
+    $drawerWhatsappUrl = app(WhatsAppOrderService::class)->buildInquiryUrl('Hello, I have a question about your products.');
 
     $desktopNavItems = [
         ['key' => 'home', 'label' => 'Home', 'href' => route('home')],
@@ -80,6 +82,7 @@
                     <x-store.nav-link
                         :href="$item['href']"
                         :active="StoreNavigation::isActive($item['key'])"
+                        :accent="$item['key'] === 'sale'"
                     >
                         {{ $item['label'] }}
                     </x-store.nav-link>
@@ -142,7 +145,9 @@
         aria-label="Mobile navigation"
     >
         <div class="store-drawer-header">
-            <span class="store-drawer-title">Menu</span>
+            <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-2.5" @click="mobileOpen = false">
+                <x-store.logo-mark :show-text="true" />
+            </a>
             <button type="button" @click="mobileOpen = false" class="store-icon-btn" aria-label="Close menu">
                 <x-icons.x class="h-6 w-6" />
             </button>
@@ -154,6 +159,7 @@
                     @class([
                         'store-drawer-link',
                         'store-drawer-link-active' => StoreNavigation::isActive($item['key']),
+                        'store-drawer-link-sale' => $item['key'] === 'sale' && ! StoreNavigation::isActive($item['key']),
                     ])
                     @if(StoreNavigation::isActive($item['key'])) aria-current="page" @endif
                 >
@@ -163,6 +169,12 @@
                     {{ $item['label'] }}
                 </a>
             @endforeach
+        </div>
+        <div class="store-drawer-footer">
+            <a href="{{ $drawerWhatsappUrl }}" target="_blank" rel="noopener" class="store-drawer-whatsapp">
+                <x-icons.whatsapp class="h-5 w-5 shrink-0" />
+                Chat with us on WhatsApp
+            </a>
         </div>
     </nav>
 

@@ -27,27 +27,20 @@ class OrderService
             $subtotal = $this->cart->subtotal();
             $deliveryFee = $this->cart->deliveryFee();
             $discountTotal = $this->cart->discountAmount();
-            $total = max(0, $subtotal - $discountTotal + $deliveryFee);
+            $customizationFee = $this->cart->customizationFee();
             $couponData = $this->cart->coupon();
 
-            $order = Order::query()->create([
-                'order_number' => $this->generateOrderNumber(),
-                'customer_id' => $customer->id,
-                'status' => OrderStatus::Pending,
-                'order_source' => 'website',
-                'subtotal' => $subtotal,
-                'discount_total' => $discountTotal,
-                'delivery_fee' => $deliveryFee,
-                'total' => $total,
-                'customer_name' => $customerData['name'],
-                'customer_phone' => $customerData['phone'],
-                'customer_address' => $customerData['address'],
-                'customer_notes' => $customerData['notes'] ?? null,
-            ]);
+            $orderItemsData = [];
+            $customizationTotal = 0.0;
 
             foreach ($this->cart->items() as $item) {
-                OrderItem::query()->create([
-                    'order_id' => $order->id,
+                $submitted = $customerData['customizations'][$item['key']] ?? null;
+                $requested = $item['is_customizable'] && ! empty($submitted['requested']);
+                $details = $requested ? trim((string) ($submitted['details'] ?? '')) : null;
+                $fee = $requested ? $customizationFee : 0.0;
+                $customizationTotal += $fee;
+
+                $orderItemsData[] = [
                     'product_id' => $item['product_id'],
                     'product_variant_id' => $item['variant_id'] ?? null,
                     'product_name' => $item['product_name'],
@@ -57,7 +50,32 @@ class OrderService
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
                     'total_price' => $item['total_price'],
-                ]);
+                    'customization_requested' => $requested,
+                    'customization_details' => $details,
+                    'customization_fee' => $fee,
+                ];
+            }
+
+            $total = max(0, $subtotal - $discountTotal + $deliveryFee + $customizationTotal);
+
+            $order = Order::query()->create([
+                'order_number' => $this->generateOrderNumber(),
+                'customer_id' => $customer->id,
+                'status' => OrderStatus::Pending,
+                'order_source' => 'website',
+                'subtotal' => $subtotal,
+                'discount_total' => $discountTotal,
+                'delivery_fee' => $deliveryFee,
+                'customization_total' => $customizationTotal,
+                'total' => $total,
+                'customer_name' => $customerData['name'],
+                'customer_phone' => $customerData['phone'],
+                'customer_address' => $customerData['address'],
+                'customer_notes' => $customerData['notes'] ?? null,
+            ]);
+
+            foreach ($orderItemsData as $itemData) {
+                OrderItem::query()->create(['order_id' => $order->id, ...$itemData]);
             }
 
             $order->load(['items', 'customer']);

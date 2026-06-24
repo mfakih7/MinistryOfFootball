@@ -280,7 +280,7 @@
                 @else
                     <div class="mt-8">
                         <p class="text-sm text-gray-500">This product is not available yet.</p>
-                        <a href="{{ route('shop') }}" class="btn-primary mt-4 inline-flex">Browse Shop</a>
+                        <a href="{{ route('shop') }}" class="btn-storefront-primary mt-4 inline-flex">Browse Shop</a>
                     </div>
                 @endif
             </div>

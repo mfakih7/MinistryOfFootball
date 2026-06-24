@@ -54,6 +54,15 @@
                                 <td class="py-3 pr-4">${{ number_format($item->unit_price, 2) }}</td>
                                 <td class="py-3 font-semibold">${{ number_format($item->total_price, 2) }}</td>
                             </tr>
+                            @if ($item->customization_requested)
+                                <tr class="bg-blue-50/50">
+                                    <td colspan="6" class="px-2 py-2 text-xs text-blue-800">
+                                        <span class="font-semibold">Customization: Yes</span>
+                                        &middot; Details: {{ $item->customization_details }}
+                                        &middot; Fee: ${{ number_format($item->customization_fee, 2) }}
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
@@ -72,6 +81,9 @@
                     <div class="flex justify-between"><dt>Subtotal</dt><dd>${{ number_format($order->subtotal, 2) }}</dd></div>
                     @if ($order->discount_total > 0)
                         <div class="flex justify-between text-green-700"><dt>Discount</dt><dd>-${{ number_format($order->discount_total, 2) }}</dd></div>
+                    @endif
+                    @if ($order->customization_total > 0)
+                        <div class="flex justify-between"><dt>Customization</dt><dd>${{ number_format($order->customization_total, 2) }}</dd></div>
                     @endif
                     <div class="flex justify-between"><dt>Delivery</dt><dd>${{ number_format($order->delivery_fee, 2) }}</dd></div>
                     <div class="flex justify-between border-t pt-2 font-bold"><dt>Total</dt><dd>${{ number_format($order->total, 2) }}</dd></div>
