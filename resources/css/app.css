@@ -1586,4 +1586,64 @@
     .store-footer-desktop {
         @apply hidden md:grid md:grid-cols-[1.4fr_1fr_1fr_1.1fr] md:gap-12;
     }
+
+    /* Global loader */
+    .global-loader {
+        @apply fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-5 bg-brand-black/80 opacity-0 backdrop-blur-sm transition-opacity duration-200 ease-out;
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    .global-loader.is-visible {
+        @apply opacity-100;
+        pointer-events: auto;
+        visibility: visible;
+    }
+
+    .global-loader-ball-wrap {
+        @apply relative flex h-20 w-20 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/15;
+        box-shadow: 0 0 40px rgba(229, 9, 20, 0.25);
+    }
+
+    .global-loader-ball {
+        @apply text-5xl text-white drop-shadow-lg;
+        animation: global-loader-spin 0.9s linear infinite;
+    }
+
+    .global-loader-ball-fallback {
+        @apply hidden h-12 w-12 rounded-full;
+        background:
+            radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.65), transparent 45%),
+            repeating-conic-gradient(#0b0f14 0deg 30deg, #ffffff 30deg 60deg);
+        box-shadow: inset 0 0 0 2px rgba(11, 15, 20, 0.4);
+        animation: global-loader-spin 0.9s linear infinite;
+    }
+
+    .global-loader.fa-missing .global-loader-ball {
+        @apply hidden;
+    }
+
+    .global-loader.fa-missing .global-loader-ball-fallback {
+        @apply block;
+    }
+
+    .global-loader-text {
+        @apply text-sm font-semibold uppercase tracking-[0.18em] text-white/90;
+    }
+
+    @keyframes global-loader-spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .global-loader-ball,
+        .global-loader-ball-fallback {
+            animation: none;
+        }
+    }
 }

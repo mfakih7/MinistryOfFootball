@@ -28,9 +28,13 @@
         <link rel="icon" href="{{ $faviconUrl }}">
     @endif
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col">
+    <x-global-loader />
+
     <x-store.header />
 
     <main class="flex-1">
